@@ -3,6 +3,7 @@ var keys = require("./keys.js");
 var request = require("request");
 var inquirer = require("inquirer");
 var Spotify = require('node-spotify-api');
+var fs = require("fs");
 
 
 
@@ -47,15 +48,30 @@ switch (action) {
 }
 
 function liriDo(){
-fs.readFile("random.txt", "utf8", function(error, data){
+  fs.readFile("random.txt", "utf8", function(error, data){
 
-  if (error) {
-      return console.log(error);
-  }
-  var dataArr = data.split(",");
+    if (error) {
+        return console.log(error);
+    }
+      var dataArr = data.split(",");
 
-  
-}
+
+      action = dataArr[0];
+      subject = dataArr[1];
+
+      console.log(action);
+
+      if(action === "spotify-this-song"){
+        spotify();
+      }
+      if(action === "movie-this"){
+        omdb();
+      }
+      if(action === "my-tweets"){
+        twitter();
+      }
+
+});
 
 
   
@@ -87,7 +103,7 @@ function spotify(){
       console.log("<><><><><><><><><><><><><><><><>");
       console.log("Artist: " + data.tracks.items[0].artists[0].name);
       console.log("Album: " + data.tracks.items[0].album.name);
-      if (data.tracks.items[0].preview_url = null) {
+      if (data.tracks.items[0].preview_url == null) {
       console.log(data.tracks.items[0].external_urls.spotify)
     } else {console.log("Preview Link: " + data.tracks.items[0].preview_url);}
       console.log("<><><><><><><><><><><><><><><><>");
@@ -104,7 +120,7 @@ function spotify(){
         console.log("<><><><><><><><><><><><><><><><>");
         console.log("Artist: " + data.tracks.items[0].artists[0].name);
         console.log("Album: " + data.tracks.items[0].album.name);
-        if (data.tracks.items[0].preview_url = null) {
+        if (data.tracks.items[0].preview_url == null) {
         console.log(data.tracks.items[0].external_urls.spotify)
       } else {console.log("Preview Link: " + data.tracks.items[0].preview_url);}
         console.log("<><><><><><><><><><><><><><><><>");
@@ -168,3 +184,4 @@ function omdb(){
           });
       };
   };
+}  
