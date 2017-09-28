@@ -4,8 +4,28 @@ var request = require("request");
 var inquirer = require("inquirer");
 var Spotify = require('node-spotify-api');
 
+
+
+var nodeArgs = process.argv;
 var action = process.argv[2];
-var subject = process.argv[3];
+var subject = "";
+// var movieName = "";
+
+for (var i = 3; i < nodeArgs.length; i++) {
+
+  if (i > 3 && i < nodeArgs.length) {
+
+    subject = subject + "+" + nodeArgs[i];
+
+  }
+
+  else {
+
+    subject = nodeArgs[i];
+
+  }
+}
+
 
 
 switch (action) {
@@ -20,7 +40,25 @@ switch (action) {
   case "movie-this":
     omdb();
     break;
+
+    case "do-what-it-says":
+    liriDo();
+    break;
 }
+
+function liriDo(){
+fs.readFile("random.txt", "utf8", function(error, data){
+
+  if (error) {
+      return console.log(error);
+  }
+  var dataArr = data.split(",");
+
+  
+}
+
+
+  
 
 function twitter(){
 	var params = {screen_name: 'MattBeebe80'};
@@ -38,54 +76,95 @@ function twitter(){
 }
 
 function spotify(){
-	keys.spotify.search({ type: 'track', query: subject, limit: "4" }, function(err, data) {
-  		if (err) {
-    		return console.log('Error occurred: ' + err);
-  		}
-  		console.log("")
-  		console.log("")
-  		console.log("<><><><><><><><><><><><><><><><>");
-  		console.log("Artist: " + data.tracks.items[0].artists[0].name);
-  		console.log("Album: " + data.tracks.items[0].album.name);
-  		console.log("Preview Link: " + data.tracks.items[0].preview_url);
-  		console.log("<><><><><><><><><><><><><><><><>");
-  		console.log("")
-  		console.log("")
-		// console.log(JSON.stringify(data, null, 2)); 
-		if (data.tracks.items[0].preview_url = null) {
-			return console.log(data.tracks.items[0].external_urls.spotify)
-		}
-	});
+  if (subject === "") {
+    keys.spotify.search({ type: 'track', query: "The Sign Ace of Base", limit: "1" }, function(err, data) {
+      if (err) {
+        return console.log('Error occurred: ' + err);
+      }
+      console.log("HEY YOU DIDN'T CHOOSE A SONG! SO I CHOSE ONE FOR YOU!")
+      console.log("")
+      console.log("")
+      console.log("<><><><><><><><><><><><><><><><>");
+      console.log("Artist: " + data.tracks.items[0].artists[0].name);
+      console.log("Album: " + data.tracks.items[0].album.name);
+      if (data.tracks.items[0].preview_url = null) {
+      console.log(data.tracks.items[0].external_urls.spotify)
+    } else {console.log("Preview Link: " + data.tracks.items[0].preview_url);}
+      console.log("<><><><><><><><><><><><><><><><>");
+      console.log("")
+      console.log("") 
+    });
+    } else {
+  	keys.spotify.search({ type: 'track', query: subject, limit: "1" }, function(err, data) {
+    		if (err) {
+      		return console.log('Error occurred: ' + err);
+    		}
+    		console.log("")
+        console.log("")
+        console.log("<><><><><><><><><><><><><><><><>");
+        console.log("Artist: " + data.tracks.items[0].artists[0].name);
+        console.log("Album: " + data.tracks.items[0].album.name);
+        if (data.tracks.items[0].preview_url = null) {
+        console.log(data.tracks.items[0].external_urls.spotify)
+      } else {console.log("Preview Link: " + data.tracks.items[0].preview_url);}
+        console.log("<><><><><><><><><><><><><><><><>");
+        console.log("")
+        console.log("")
+    });
+  }
 }
-
-
 function omdb(){
-	var queryUrl = "http://www.omdbapi.com/?t=" + subject + "&y=&plot=short&apikey=40e9cece";
-	request(queryUrl, function(error, response, body) {
-		if (subject == null) {
-			request("http://www.omdbapi.com/?t=remember+the+titans&y=&plot=short&apikey=40e9cece", function(error, response, body) {
-			});
-		}
+  
+    if (subject === "") {
+      request("http://www.omdbapi.com/?t=remember+the+titans&y=&plot=short&apikey=40e9cece", function(error, response, body) {
+        
+        if (!error && response.statusCode === 200){
 
-  		if (!error && response.statusCode === 200) {
+          console.log("HEY YOU DIDN'T CHOOSE A MOVIE! SO I CHOSE ONE FOR YOU!")
+          console.log("")
+          console.log("")
+          console.log("<><><><><><><><><><><><><><><><>");
+          console.log("Title: " + JSON.parse(body).Title);
+          console.log("Release Year: " + JSON.parse(body).Year);
+          console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
+          console.log("Rotten Tomatoes Score: " + JSON.parse(body).Ratings[1].Value);
+          console.log("Directed By: " + JSON.parse(body).Director);
+          console.log("Writen By: " + JSON.parse(body).Writer);
+          console.log("Actors: " + JSON.parse(body).Actors);
+          console.log("Plot: " + JSON.parse(body).Plot);
+          console.log("Country: " + JSON.parse(body).Country);
+          console.log("Language: " + JSON.parse(body).Language);
+          console.log("<><><><><><><><><><><><><><><><>");
+          console.log("")
+          console.log("")
 
-			console.log("Title: " + JSON.parse(body).Title);
-    		console.log("Release Year: " + JSON.parse(body).Year);
-    		console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
-    		console.log("Rotten Tomatoes Score: " + JSON.parse(body).Ratings[1].Value);
-    		console.log("Directed By: " + JSON.parse(body).Director);
-    		console.log("Writen By: " + JSON.parse(body).Writer);
-    		console.log("Actors: " + JSON.parse(body).Actors);
-    		console.log("Plot: " + JSON.parse(body).Plot);
-    		console.log("Country: " + JSON.parse(body).Country);
-    		console.log("Language: " + JSON.parse(body).Language);
+        } else {
+            console.log(error);
+          }
+          })
+          }else {request("http://www.omdbapi.com/?t=" + subject + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
 
+            if (!error && response.statusCode === 200) {
 
-  		}
-  	console.log(queryUrl);
+                console.log("")
+                console.log("")
+                console.log("<><><><><><><><><><><><><><><><>");
+                console.log("Title: " + JSON.parse(body).Title);
+                console.log("Release Year: " + JSON.parse(body).Year);
+                console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
+                console.log("Rotten Tomatoes Score: " + JSON.parse(body).Ratings[1].Value);
+                console.log("Directed By: " + JSON.parse(body).Director);
+                console.log("Writen By: " + JSON.parse(body).Writer);
+                console.log("Actors: " + JSON.parse(body).Actors);
+                console.log("Plot: " + JSON.parse(body).Plot);
+                console.log("Country: " + JSON.parse(body).Country);
+                console.log("Language: " + JSON.parse(body).Language);
+                console.log("<><><><><><><><><><><><><><><><>");
+                console.log("")
+                console.log("")
+              } else{console.log(error);
+                }
 
-	});
-}	
-// keys.client.get('search/tweets', {q: 'bmw'}, function(error, tweets, response) {
-//    console.log(tweets);
-// });
+          });
+      };
+  };
