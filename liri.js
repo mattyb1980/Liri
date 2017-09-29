@@ -70,8 +70,8 @@ function liriDo(){
       if(action === "my-tweets"){
         twitter();
       }
-
-});
+  });
+};
 
 
   
@@ -111,21 +111,23 @@ function spotify(){
       console.log("") 
     });
     } else {
-  	keys.spotify.search({ type: 'track', query: subject, limit: "1" }, function(err, data) {
+  	keys.spotify.search({ type: 'track', query: subject }, function(err, data) {
     		if (err) {
       		return console.log('Error occurred: ' + err);
     		}
+      for (var i = 0; i < data.tracks.items.length; i++) { 
     		console.log("")
         console.log("")
         console.log("<><><><><><><><><><><><><><><><>");
-        console.log("Artist: " + data.tracks.items[0].artists[0].name);
-        console.log("Album: " + data.tracks.items[0].album.name);
-        if (data.tracks.items[0].preview_url == null) {
-        console.log(data.tracks.items[0].external_urls.spotify)
-      } else {console.log("Preview Link: " + data.tracks.items[0].preview_url);}
+        console.log("Artist: " + data.tracks.items[i].artists[0].name);
+        console.log("Album: " + data.tracks.items[i].album.name);
+        if (data.tracks.items[i].preview_url == null) {
+        console.log(data.tracks.items[i].external_urls.spotify)
+      } else {console.log("Preview Link: " + data.tracks.items[i].preview_url);}
         console.log("<><><><><><><><><><><><><><><><>");
         console.log("")
         console.log("")
+      };
     });
   }
 }
@@ -158,7 +160,7 @@ function omdb(){
             console.log(error);
           }
           })
-          }else {request("http://www.omdbapi.com/?t=" + subject + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
+          } else {request("http://www.omdbapi.com/?t=" + subject + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
 
             if (!error && response.statusCode === 200) {
 
@@ -178,10 +180,9 @@ function omdb(){
                 console.log("<><><><><><><><><><><><><><><><>");
                 console.log("")
                 console.log("")
-              } else{console.log(error);
+              } else {console.log(error);
                 }
 
           });
       };
-  };
-}  
+  };  
